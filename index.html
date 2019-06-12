@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spouts-on-Routes</title>
+    <meta name="viewport" content="initial-scale=1.0" content="width=device-width">
+    <meta charset="utf-8">
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <form class="brewerySearchForm">
+
+      <!-- <label>Brewery Criteria</label> -->
+
+      <label for="cityText">City
+        <input type="text" id="cityText">
+      </label>
+
+      <label for="stateText">State
+        <input type="text" id="stateText">
+      </label>
+
+      <label for="breweryText">Brewery
+        <input type="text" id="breweryText">
+      </label>
+
+      <label for="resultsPerPage">Results Per Page
+        <select id="resultsPerPage">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+        </select>
+      </label>
+
+      <input type="submit" class="searchButton" value="Search">
+    </form>
+
+    <section class="breweryResults">
+      <div id="pagesButtons">
+        <button>
+          <label>1
+          </label>
+        </button>
+      </div>
+      <div id="resultsText""></div>
+    </section>
+
+
+
+
+
+
+
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxRTj3E88U1sjsPZ3Z4Lk5aWb0NxWu5d8&callback=initMap"
+    async defer></script>
+    <script src="script.js"></script>
+  </body>
+</html>

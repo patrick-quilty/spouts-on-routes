@@ -1,0 +1,18 @@
+#map{
+  height: 400px;
+  width: 100%;
+}
+
+.brewerySearchForm {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+}
+
+.results {
+
+}
+
+.entry {
+  border: 1px solid black;
+}
