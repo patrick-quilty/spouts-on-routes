@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Spouts-on-Routes</title>
     <meta name="viewport" content="initial-scale=1.0" content="width=device-width">
@@ -8,56 +8,72 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
   <body>
-    <div id="map"></div>
-    <form class="brewerySearchForm">
-
-      <!-- <label>Brewery Criteria</label> -->
-
-      <label for="cityText">City
-        <input type="text" id="cityText">
-      </label>
-
-      <label for="stateText">State
-        <input type="text" id="stateText">
-      </label>
-
-      <label for="breweryText">Brewery
-        <input type="text" id="breweryText">
-      </label>
-
-      <label for="resultsPerPage">Results Per Page
-        <select id="resultsPerPage">
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-          <option value="50">50</option>
-        </select>
-      </label>
-
-      <input type="submit" class="searchButton" value="Search">
-    </form>
-
-    <section class="breweryResults">
-      <div id="pagesButtons">
-        <button>
-          <label>1
-          </label>
-        </button>
-      </div>
-      <div id="resultsText""></div>
+    <section class="mapDir">
+      <div id="map"></div>
+      <div id="textDirections"></div>
+      <button class="toggleTextDir">Toggle<br/>Directions</button>
     </section>
 
 
+    <form class="searchForm" id="searchForm">
+      <label class="spoutLabelC" for="cityText">City
+        <input type="text" id="cityText">
+      </label>
+      <label class="spoutLabelS" for="stateText">State
+        <input type="text" id="stateText">
+      </label>
+      <label class="spoutLabelB" for="breweryText">Brewery Name
+        <input type="text" id="breweryText">
+      </label>
+      <div class="tooltip">
+        <input type="submit" class="searchSpouts tooltip" value="Find Spouts"><span class="tooltiptext tip1">Search for where<br>you want to go<br>then click on a<br>brewery below.</span><span class="tooltiptext tipError tipError1">Please fill out at least one field in this search area.</span>
+      </div>
+    </form>
 
 
+    <form class="startingPoints">
+      <div class="firstPoint">
+        <label for="starting1Text" class="start1">Starting Point
+          <input type="text" id="starting1Text">
+        </label>
+        <input type="button" class="slideFriend" value="Invite a Friend">
+      </div>
+      <div id="otherPoints"></div>
+      <div class="routeButtons">
+        <input type="button" class="backToSpouts" value="Back to Spouts">
+
+        <div class="tooltip tooltip2">
+          <input type="button" class="searchRoutes" value="Find Routes"><span class="tooltiptext tipError tipError2">Please fill out<br>at least one<br>starting point.</span>
+        </div>
+
+      </div>
+    </form>
 
 
+    <section class="breweryResults">
+      <div id="showResults">
+        <label id="numberOfResults">10 Results Found</label>
+        <label for="resultsPerPage">Results Per Page
+          <select id="resultsPerPage">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+          </select>
+        </label>
+      </div>
+      <div id="pagesButtons">
+        <button>
+          <label>1</label>
+        </button>
+      </div>
+    </section>
 
 
+    <div id="resultsText"></div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxRTj3E88U1sjsPZ3Z4Lk5aWb0NxWu5d8&callback=initMap"
-    async defer></script>
-    <script src="script.js"></script>
+
+    <script src="script.js" defer></script>
   </body>
 </html>
