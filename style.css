@@ -12,6 +12,10 @@ body{
   width: 344px;/*IE6*/
 }
 
+.mapDir {
+  z-index: 1;
+}
+
 .tooltip {
   position: relative;
   display: inline-block;
@@ -27,7 +31,7 @@ body{
   padding: 5px 0;
   border-radius: 6px;
   position: absolute;
-  z-index: 1;
+  z-index: 2;
 }
 
 .tooltip .tooltiptext::after {
@@ -241,7 +245,6 @@ h2 {
     top: 0px;
     left: 0px;
     width: 100%;
-    z-index: 100;
     background-color: white;
   }
 

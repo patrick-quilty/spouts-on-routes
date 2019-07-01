@@ -1,8 +1,3 @@
-// https://www.sitepoint.com/google-maps-javascript-api-the-right-way/
-
-
-// High: 
-// Message after search prompting the user to click a brewery and indicate a starting place, on brewery click on map or below bring brew name to textbox, on top click though don't hide all other markers
 
 // Medium:
 // bike layer key: Dark green routes indicated dedicated bicycle routes. Light green routes indicate streets with dedicated “bike lanes.” Dashed routes indicate streets or paths otherwise recommended for bicycle usage.
@@ -34,7 +29,6 @@ let brewResults;
 let routeResults;
 let states;
 let stateCode;
-let googleURL = 'https://maps.googleapis.com/maps/api';
 let googleKey = 'AIzaSyAIWwZQ6TOKQzmvnZPY4hMEoF3eBdAGckU';
 let beerUrl = 'https://api.openbrewerydb.org/breweries?';
 let geoUrl = 'https://www.mapquestapi.com/geocoding/v1/address?key=';
@@ -642,9 +636,9 @@ function initialSetup() {
   $('.tipError').hide();
   define();
   addListeners();
+  initMap();
   displayBrewResults(1); // Display sample data
 }
-$(initialSetup);
 document.addEventListener('DOMContentLoaded', function () {
   if (document.querySelectorAll('#map').length > 0)
   {
@@ -656,7 +650,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let js_file = document.createElement('script');
     js_file.type = 'text/javascript';
-    js_file.src = `https://maps.googleapis.com/maps/api/js?callback=initMap&key=${googleKey}&language=` + lang;
+    js_file.src = `https://maps.googleapis.com/maps/api/js?callback=initialSetup&key=${googleKey}&language=` + lang;
     document.getElementsByTagName('head')[0].appendChild(js_file);
   }
-}); // Load initial map after all other DOM content already loaded
+}); // Load initial setup after everything else is loaded for the correct order of map display
