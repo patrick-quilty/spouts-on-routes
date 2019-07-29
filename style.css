@@ -5,23 +5,107 @@
   font-size: 0px;
   text-align: center;
 }
-
-body{
-  min-width: 344px;
-  width: auto !important;/*Firefox*/
-  width: 344px;/*IE6*/
+label, input, select, p, .credits {
+  font-size: 14px;
+}
+input[type=button], input[type=submit], .go, select, .toggleMapDir, .fullscreen, .showKey, .slideUp {
+  cursor: pointer;
+}
+.credits {
+  text-align: center;
+  font: 400 lighter;
+  margin: 0;
+  padding: 0;
 }
 
+/* Splash Page */
+.splashPage {
+  pointer-events: none;
+}
+.showSplash {
+  opacity: 0.1;
+  pointer-events: none;
+}
+.logo {
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.stretch {
+  width: 100vw;
+}
+.center {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+.title, .tagline, .go {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.title {
+  top: 29vh;
+}
+.tagline {
+  top: 52vh;
+}
+.go {
+  top: 38.25vh;
+  width: 30px;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  pointer-events: all;
+}
+.title, .tagline {
+  cursor: context-menu;
+  font-family: 'Farro', sans-serif;
+  padding: 0;
+  margin: 0;
+}
+.no_select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+/* Maps and Directions */
 .mapDir {
   z-index: 1;
+  height: 35vh;
+  display: flex;
+}
+#map {
+  width: 100%;
+  height: 100%;
+}
+#textDirections {
+  width: 100%;
+  height: 100%;
+  font-family: 'Roboto','sans-serif';
+  font-size: 15px;
+  overflow: scroll;
+}
+.hideMap, .hideDirections {
+  display: none;
+}
+.adp-placemark {
+  display: none; /* Removes incorrect addresses from starting and ending text directions because of lat lng estimation */
 }
 
+/* Tool Tips */
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dashed black;
+  width: 150px;
 }
-
 .tooltip .tooltiptext {
   visibility: hidden;
   width: 120px;
@@ -31,9 +115,8 @@ body{
   padding: 5px 0;
   border-radius: 6px;
   position: absolute;
-  z-index: 2;
+  z-index: 1;
 }
-
 .tooltip .tooltiptext::after {
   content: " ";
   position: absolute;
@@ -44,105 +127,145 @@ body{
   border-style: solid;
   border-color: black transparent transparent transparent;
 }
-
-.tip1, .tipError {
+.tipError {
   visibility: visible;
   right: -5px;
   bottom: 105%;
 }
-
-.tip1 {
-  visibility: hidden;
-}
-
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
 
-.spoutLabelC  {
-  position: relative;
-  left: 62px;
-}
-
-.spoutLabelS  {
-  position: relative;
-  left: 58.5px;
-  padding-top: 2px;
-  padding-bottom: 2px;
-}
-
-.spoutLabelB  {
-  position: relative;
-  left: 1px;
-}
-
-.startingPoints, .searchForm {
+/* Search Area */
+.searchContainer {
+  z-index: 1;
   border: 1px solid black;
   display: flex;
-  flex-direction: column;
-  padding: 2px;
-  width: 339px;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: #68829E;
+  color: white;
+}
+.hide {
+  pointer-events: none;
+  opacity: 0.5;
+}
+#endPoint {
+  background-color: lightgray;
+}
+.labelDestination {
+  padding-top: 3px;
+  padding-bottom: 3px;
   margin-left: auto;
   margin-right: auto;
 }
+form, .otherControls {
+  display: flex;
+  flex-direction: column;
+  width: 20vw;
+  max-width: 150px;
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 108px;
+  justify-content: space-evenly;
+}
+input, .labelDestination, .searchRoutes, .searchSpouts, .toggleMapDir, .fullscreen, .showKey {
+  max-width: 150px;
+  font-size: calc(1.5vw + 3px);
+}
+.searchRoutes, .searchSpouts, .toggleMapDir, .fullscreen, .showKey {
+  width: 20vw;
+  padding-left: 1vw;
+}
+@media screen and (min-width: 325px) {
+  input, .labelDestination, .searchRoutes, .searchSpouts, .toggleMapDir, .fullscreen, .showKey {
+    font-size: calc(1.5vw + 4px);
+  }
+}
+@media screen and (min-width: 550px) {
+  input, .labelDestination, .searchRoutes, .searchSpouts, .toggleMapDir, .fullscreen, .showKey {
+    font-size: 14px;
+  }
+}
 
-.breweryResults {
+/* Instructions */
+.instructions {
+  border: 1px solid black;
+  background-color: #505160;
+  color: white;
+}
+.instructionsText {
+  margin: 0px;
+  text-align: center;
+  font: 900;
+}
+@media screen and (max-width: 324px) {
+  .instructionsText {
+    font-size: calc(1.5vw + 4px);
+  }
+}
+
+/* Key */
+.key {
+  display: flex;
+  flex-direction: column;
+  background-color: #AEBD38;
+  color: white;
   border: 1px solid black;
 }
-
-.startingPoints {
-  display: none;
-}
-
-.searchSpouts {
-  width: 338px;
-  margin-top: 2px;
-}
-
-.routeButtons {
-  width: 338px;
-  margin-top: 2px;
+.keyRow {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  height: 16px;
+  margin: 1px;
 }
-
-.backToSpouts, .tooltip2 {
-  width: 49.5%;
+.keyIcon {
+  width: 16px;
+  height: 16px;
+  background-color: white;
 }
-
-.searchRoutes {
-  width: 100%;
+.keySegment {
+  width: calc(1.5vw + 45px);
+  max-width: 65px;
+  margin-left: 10px;
 }
-
-.toggleTextDir {
+.keySegment, .keyDescription {
+  font-size: calc(1.5vw + 3px);
+}
+@media screen and (min-width: 500px) {
+  .keySegment, .keyDescription {
+    font-size: 14px;
+  }
+  .keySegment {
+    width: 65px;
+  }
+}
+.slideUp {
+  width: 16px;
+  height: 16px;
   display: flex;
   position: absolute;
-  right: 20px;
-  top: 18px;
-  background-color: transparent;
-  border: black dotted;
-  color: black;
-  cursor: pointer;
-  font: 8px Roboto, bolder, Arial, sans-serif;
+  right: 10px;
 }
 
-.toggleTextDir:hover {
-  background-color: white;
-  font: 18px Roboto, bolder, Arial, sans-serif;
-  border: none;
+/* Results Display Controls */
+.breweryResults {
+  border: 1px solid black;
+  background-color: #68829E;
+  color: white;
 }
-
-#textDirections {
-  display: none;
-  height: 400px;
-  min-height: 400px;
-  width: 100%;
+#showResults {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
-
-input {
-  width: 150px;
+#numberOfResults {
+  padding-bottom: 1px;
+  align-self: flex-end;
 }
-
+.perPageLabel, #numberOfResults {
+  font: bold;
+}
 #pagesButtons {
   width: 95%;
   margin-left: auto;
@@ -151,105 +274,73 @@ input {
   overflow: auto;
 }
 
-#showResults {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
-
-#numberOfResults {
-  padding-bottom: 1px;
-  align-self: flex-end;
-}
-
-label, input, select, p {
-  font-size: 14px;
-}
-
-.adp-placemark {
-  display: none; /* Removes incorrect addresses from starting and ending text directions because of lat lng estimation */
-}
-
-#map {
-  height: 400px;
-  width: 100%;
-}
-
-.friendBox {
-  margin-top: 2px;
-}
-
-.slideFriend {
-  width: 100px;
-}
-
-.firstPoint {
-  display: inline-block;
-}
-
-.friendName {
-  width: 100px;
-}
-
+/* Result Entries Area */
 .entry {
   border: 1px solid black;
   cursor: pointer;
+  background-color: #AEBD38;
+  color: white;
 }
-
+.entry:nth-child(even) {
+  background-color: #598234;
+}
 h1, h2 {
   padding: 1px;
   margin: 1px;
+  font-weight: 100;
 }
-
 h1 {
   font-size: 18px;
 }
-
 h2 {
   font-size: 14px;
 }
 
-#textDirections {
-  font-family: 'Roboto','sans-serif';
-  /* border: 1px solid black; */
-  height: 250px;
-  font-size: 15px;
-  overflow: scroll;
-}
-
-@media screen and (min-width: 600px) {
-  .toggleTextDir {
-    display: none;
-  }
-
-  .mapDir {
-    display: flex;
-  }
-
-  #textDirections {
-    visibility: visible;
-    display: flex;
-    width: 50%;
-  }
-
-  #map{
-    visibility: visible;
-    display: flex;
-    width: 50%;
-  }
-}
-
+/* Affix elements to top of screen */
 @media screen and (min-height: 550px) {
+  .behind {
+    z-index: -1;
+  }
   .mapDir {
-    position: fixed;
+    width: 100%;
     top: 0px;
     left: 0px;
-    width: 100%;
+  }
+  .mapDir {
+    position: fixed;
     background-color: white;
   }
-
-  .startingPoints, .searchForm, .breweryResults, #resultsText {
+  .searchContainer {
+    position: fixed;
+    top: 35vh;
+    left: 0;
+    right: 0;
+    background-color: #68829E;
+    color: white;
+  }
+  .instructions {
+    height: 25px;
+    z-index: 1;
+    top: calc(35vh + 109px);
+    left: 0;
+    right: 0;
+    display: flex;
+    position: fixed;
+  }
+  #resultsText, .breweryResults, .key, .credits {
     position: relative;
-    top: 400px;
+    top: calc(35vh + 133px);
+  }
+  .instructionsText {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .copy {
+    margin-bottom: 3px;
+  }
+  .key {
+    margin-bottom: 5px;
   }
 }
