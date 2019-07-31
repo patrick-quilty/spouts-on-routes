@@ -753,6 +753,12 @@ function initialSetup() {
 }
 function loadSplashPage() {
   // Fade everything else to the back and show the splash page
+  
+  $(window).on('beforeunload', function() {
+    $('body').hide();
+    $(window).scrollTop(0);
+  });
+  // Scroll to top of page
 
   $('.mapDir, .searchContainer, .instructions, .breweryResults, #resultsText, .credits').addClass('showSplash no_select');
   document.body.style.overflow = 'hidden';
