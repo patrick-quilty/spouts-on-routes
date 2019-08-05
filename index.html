@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <title>Spouts-on-Routes</title>
-    <meta name="viewport" content="initial-scale=1.0" content="width=device-width">
+    <meta name="viewport" content="width=device-width">
     <meta charset="utf-8">
     <link href="style.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Farro&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
 
       <div class="searchContainer"  tabIndex="-1">
         <form tabIndex="-1" role="form" class="searchForm" id="searchForm">
-          <input tabIndex="-1" type="text" id="cityText" placeholder="City">
+          <input tabIndex="-1" type="text" id="cityText" placeholder="City" value="Cincinnati">
           <input tabIndex="-1" type="text" id="stateText" placeholder="State">
           <input tabIndex="-1" type="text" id="breweryText" placeholder="Brewery Name">
           <div tabIndex="-1" class="tooltip">
@@ -50,7 +50,7 @@
       <section tabIndex="-1" role="region" class='key'></section>
 
       <section tabIndex="-1" role="region" class='instructions'>
-        <p tabIndex="-1" class='instructionsText'>Click on a brewery below then add a starting point</p>
+        <p tabIndex="-1" class='instructionsText no_select'>Click on a brewery then add a starting point</p>
       </section>
 
       <section tabIndex="-1" role="region" class="breweryResults">
@@ -69,7 +69,7 @@
         <div tabIndex="-1" id="pagesButtons"></div>
       </section>
 
-      <div tabIndex="-1" id="resultsText"></div>
+      <div tabIndex="-1" class="tileContainer" id="resultsText"></div>
       
       <script src="script.js" defer></script>
     </body>

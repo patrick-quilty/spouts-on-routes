@@ -2,7 +2,7 @@
 
 Live App: [Live App](https://quiltdaddy.github.io/spouts-on-routes/)
 
-Screenshot: ![Screenshot](https://i.imgur.com/zPgiqCf.png)
+Screenshot: ![Screenshot](https://i.imgur.com/m2IdGKk.png)
 
 This project allows a user to search for breweries within the United States 
 by city, state, or brewery name.  Open Brewery DB returns the results of the 

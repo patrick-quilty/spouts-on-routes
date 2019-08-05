@@ -8,14 +8,18 @@
 label, input, select, p, .credits {
   font-size: 14px;
 }
-input[type=button], input[type=submit], .go, select, .toggleMapDir, .fullscreen, .showKey, .slideUp {
+input[type=button], input[type=submit], .go, select, .toggleMapDir, .fullscreen, .showKey {
   cursor: pointer;
 }
-.credits {
+.credits * {
   text-align: center;
   font: 400 lighter;
   margin: 0;
+  margin-top: 5px;
   padding: 0;
+}
+body * {
+  outline: none;
 }
 
 /* Splash Page */
@@ -78,7 +82,7 @@ input[type=button], input[type=submit], .go, select, .toggleMapDir, .fullscreen,
 
 /* Maps and Directions */
 .mapDir {
-  z-index: 1;
+  z-index: 2;
   height: 35vh;
   display: flex;
 }
@@ -115,7 +119,6 @@ input[type=button], input[type=submit], .go, select, .toggleMapDir, .fullscreen,
   padding: 5px 0;
   border-radius: 6px;
   position: absolute;
-  z-index: 1;
 }
 .tooltip .tooltiptext::after {
   content: " ";
@@ -129,11 +132,17 @@ input[type=button], input[type=submit], .go, select, .toggleMapDir, .fullscreen,
 }
 .tipError {
   visibility: visible;
+  position: absolute;
   right: -5px;
   bottom: 105%;
+  border: 1px solid black;
+  z-index: 1;
 }
 .tooltip:hover .tooltiptext {
   visibility: visible;
+}
+.showKey {
+  z-index: 1;
 }
 
 /* Search Area */
@@ -242,6 +251,7 @@ input, .labelDestination, .searchRoutes, .searchSpouts, .toggleMapDir, .fullscre
   }
 }
 .slideUp {
+  cursor: pointer;
   width: 16px;
   height: 16px;
   display: flex;
@@ -275,6 +285,9 @@ input, .labelDestination, .searchRoutes, .searchSpouts, .toggleMapDir, .fullscre
   display: flex;
   overflow: auto;
 }
+.highlight {
+  border: 2px solid #598234;
+}
 
 /* Result Entries Area */
 .entry {
@@ -282,9 +295,26 @@ input, .labelDestination, .searchRoutes, .searchSpouts, .toggleMapDir, .fullscre
   cursor: pointer;
   background-color: #AEBD38;
   color: white;
+  overflow-wrap: break-word;
+  vertical-align: middle;
 }
-.entry:nth-child(even) {
-  background-color: #598234;
+@media screen and (max-width: 499px) {
+  .entry:nth-child(even) {
+    background-color: #598234;
+  }
+}
+@media screen and (min-width: 500px) {
+  .tileContainer {
+    display: inline-block;
+  }
+  .tileEntry {
+    display: inline-block;
+    width: 175px;
+    overflow-wrap: break-word;
+  }
+  .evenOdd {
+    background-color: #598234;
+  }
 }
 h1, h2 {
   padding: 1px;
@@ -293,6 +323,8 @@ h1, h2 {
 }
 h1 {
   font-size: 18px;
+  text-align: center;
+  color: black;
 }
 h2 {
   font-size: 14px;

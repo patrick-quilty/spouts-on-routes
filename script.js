@@ -1,204 +1,55 @@
 let map; // The google map
-let bounds; // A google variable for the area to show on the map
-let infoWindow = null; // The google variable for the popup info on a clicked map marker
-let markers = []; // The google formated markers for each brewery result index
+let savedMap; // The map specs before directions are requested
+let bounds; // Google variable for the area to show on the map
+let infoWindow = null; // Google variable for the popup info on a clicked map marker
+let markers = []; // Google formated markers for each brewery result index
 let markersLatLng = []; // Just the Lat and Lng for each marker for easier access
 let endMarkerIndex = -1; // The marker index for the destination
 let currentPage = 1; // The current page of the brewery results display
 let directions = false; // Whether or not there are directions saved currently
 let showMapOrDir = 'map'; // Which is showing the map or the directions
-let brewResults; // The default sample data, then the results of the brewery api search
-let keyArray; // Used to build the map key
-let states; // Alphabetical list of the states
-let stateCode; // The states abbreviations
+let brewResults = []; // The results of the brewery api search
+let originalHeight = 0; // For tiling the brewery results entries
 let googleKey = 'AIzaSyAIWwZQ6TOKQzmvnZPY4hMEoF3eBdAGckU';
 let beerUrl = 'https://api.openbrewerydb.org/breweries?';
 let geoUrl = 'https://www.mapquestapi.com/geocoding/v1/address?key=';
 let geoKey = 'tAgL4sSNSMqpOGN4SQc8hISAmqpRroMi';
-function define() {
-  // Sample and reference data
-  keyArray = [
-    ['micro', 'scooter icon', 'Micro', '< 15,000 barrels / year'],
-    ['regional', 'truck icon', 'Regional', '> 15,000 and < 6,000,000 barrels / year'],
-    ['large', 'boat icon', 'Large', '> 6,000,000 barrels / year'],
-    ['brewpub', 'beer and burger icon', 'Brewpub', 'They serve their own beer and food too'],
-    ['taproom', 'beer tap icon', 'Taproom', 'They serve their own beer, but no emphasis on food'],
-    ['contract', 'contract icon', 'Contract', 'Brewery hired to produce specific beer'],
-    ['proprietor', 'duplex icon', 'Proprietor', 'Shared brewery'],
-    ['bar', 'billiards icon', 'Bar', 'Bar that brews their own beer'],
-    ['planning', 'schematics icon', 'Planning', 'Brewery in planning'],
-    ['bikeTrail', 'solid dark green line', 'Bike Route', 'Trails'],
-    ['bikeDedicated', 'solid light green line', 'Bike Route', 'Dedicated lanes'],
-    ['bikeFriendly', 'dotted green line', 'Bike Route', 'Bike friendly roads']
-  ];
 
-  brewResults = [
-    { id: 5336,
-      name: '13 Below Brewery',
-      brewery_type: 'micro',
-      street: '7391 Forbes Rd',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45233-1013',
-      country: 'United States',
-      longitude: '-84.7063481503403',
-      latitude: '39.1263976398717',
-      phone: '5139750613',
-      website_url: 'http://www.13belowbrewery.com',
-      updated_at: '2018-08-24T15:43:19.853Z',
-      tag_list: [] },
-    { id: 5348,
-      name: 'Bad Tom Smith Brewing',
-      brewery_type: 'micro',
-      street: '4720 Eastern Ave',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45226-1893',
-      country: 'United States',
-      longitude: '-84.4180308597704',
-      latitude: '39.1199575504541',
-      phone: '5138714677',
-      website_url: 'http://www.badtomsmithbrewing.com',
-      updated_at: '2018-08-24T15:43:24.136Z',
-      tag_list: [] },
-    { id: 5353,
-      name: 'Big Ash Brewing Company',
-      brewery_type: 'planning',
-      street: '',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45244-3244',
-      country: 'United States',
-      longitude: null,
-      latitude: null,
-      phone: '5133079688',
-      website_url: 'http://www.BigAshBrewing.com',
-      updated_at: '2018-08-11T21:38:55.931Z',
-      tag_list: [] },
-    { id: 5360,
-      name: 'Boston Beer Co - DBA Samuel Adams Brewing Co',
-      brewery_type: 'regional',
-      street: '1625 Central Pkwy',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45214-2423',
-      country: 'United States',
-      longitude: '-84.5207651',
-      latitude: '39.11257',
-      phone: '6173685000',
-      website_url: 'http://www.samueladams.com',
-      updated_at: '2018-08-24T15:43:28.521Z',
-      tag_list: [] },
-    { id: 5370,
-      name: 'Brewery in Planning - Cincinnati',
-      brewery_type: 'planning',
-      street: '',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45245-2833',
-      country: 'United States',
-      longitude: null,
-      latitude: null,
-      phone: '5855767169',
-      website_url: '',
-      updated_at: '2018-08-11T21:38:56.640Z',
-      tag_list: [] },
-    { id: 5385,
-      name: 'Brink Brewing Company',
-      brewery_type: 'micro',
-      street: '5905 Hamilton Ave',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45224-3045',
-      country: 'United States',
-      longitude: '-84.545876',
-      latitude: '39.192788',
-      phone: '5138823334',
-      website_url: 'http://www.brinkbrewing.com',
-      updated_at: '2018-08-24T15:43:33.335Z',
-      tag_list: [] },
-    { id: 5394,
-      name: 'Christian Moerlein Brewing Co',
-      brewery_type: 'regional',
-      street: '1621 Moore St',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45202-6438',
-      country: 'United States',
-      longitude: '-84.5153343213929',
-      latitude: '39.113225087534',
-      phone: '5138276025',
-      website_url: 'http://www.christianmoerlein.com',
-      updated_at: '2018-08-24T15:43:37.274Z',
-      tag_list: [] },
-    { id: 5409,
-      name: 'Dead Low Brewing',
-      brewery_type: 'planning',
-      street: '',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45230',
-      country: 'United States',
-      longitude: null,
-      latitude: null,
-      phone: '5132909434',
-      website_url: 'http://www.deadlowbrewing.com',
-      updated_at: '2018-08-11T21:38:57.930Z',
-      tag_list: [] },
-    { id: 5427,
-      name: 'Fibonacci Brewing Company',
-      brewery_type: 'micro',
-      street: '1445 Compton Rd',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45231-3559',
-      country: 'United States',
-      longitude: '-84.4805528',
-      latitude: '39.218908',
-      phone: '5138321422',
-      website_url: 'http://fibbrew.com',
-      updated_at: '2018-08-24T15:43:51.294Z',
-      tag_list: [] },
-    { id: 5429,
-      name: 'Fifty West Brewing Co',
-      brewery_type: 'brewpub',
-      street: '7668 Wooster Pike',
-      city: 'Cincinnati',
-      state: 'Ohio',
-      postal_code: '45227-3926',
-      country: 'United States',
-      longitude: '-84.4134859',
-      latitude: '39.11952',
-      phone: '5138348789',
-      website_url: 'http://www.fiftywestbrew.com',
-      updated_at: '2018-08-24T15:43:52.294Z',
-      tag_list: [] }
-  ];
-
-  states = [
-    "ALABAMA", "ALASKA", "ARIZONA", "ARKANSAS", "CALIFORNIA", "COLORADO", "CONNECTICUT", "DELAWARE", "FLORIDA", "GEORGIA", "HAWAII", "IDAHO", "ILLINOIS", "INDIANA", "IOWA", "KANSAS", "KENTUCKY", "LOUISIANA", "MAINE", "MARYLAND", "MASSACHUSETTS", "MICHIGAN", "MINNESOTA", "MISSISSIPPI", "MISSOURI", "MONTANA", "NEBRASKA", "NEVADA", "NEW HAMPSHIRE", "NEW JERSEY", "NEW MEXICO", "NEW YORK", "NORTH CAROLINA", "NORTH DAKOTA", "OHIO", "OKLAHOMA", "OREGON", "PENNSYLVANIA", "RHODE ISLAND", "SOUTH CAROLINA", "SOUTH DAKOTA", "TENNESSEE", "TEXAS", "UTAH", "VERMONT", "VIRGINIA", "WASHINGTON", "WEST VIRGINIA", "WISCONSIN", "WYOMING"
-  ];
-
-  stateCode = [
-    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
-  ];
-}
+// Listeners
 function addListeners() {
+  goButtonClick();
+  brewerySearchButtonClick();
+  routeSearchButtonClick();
+  toggleMapDirButtonClick();
+  fullscreenButtonClick();
+  showMapKeyButtonClick();
+  hideMapKeyArrowImageClick();
+  handleMapDirOnWindowResize();
+  pageButtonNavigation();
+  resultsPerPageChange();
+  breweryResultsLinkClick();
+  breweryResultsEntryClick();
+}
+function goButtonClick() {
   $('.go').on('click', function() {
     event.preventDefault();
     hideSplashPage();
-  }); // Go button click
-
+    loadRowsOrTiles();
+  });
+}
+function brewerySearchButtonClick() {
   $('.searchSpouts').on('click', function() {
     event.preventDefault();
     getBrewSearchInfo();
-  }); // Brewery search button click
-
+  });
+}
+function routeSearchButtonClick() {
   $('.searchRoutes').on('click', function() {
     event.preventDefault();
     getRoutePoints();
-  }); // Route search button click
-
+  });
+}
+function toggleMapDirButtonClick() {
   $('.toggleMapDir').on('click', function() {
     event.preventDefault();
     $('#map').toggle();
@@ -214,16 +65,32 @@ function addListeners() {
     } else {
       showMapOrDir = 'dir';
     } // Record which is showing
-  }); // Toggle Map or Directions button click
-
+  });
+}
+function fullscreenButtonClick() {
   $('.fullscreen').on('click', function() {
     event.preventDefault();
     openFullscreen("mapDir");
-  }) // Fullscreen Map/Directions button click
-
+  })
+}
+function showMapKeyButtonClick() {
   $('.showKey').on('click', function() {
     event.preventDefault();
     if ($('.key').html() == '') {
+      let keyArray = [
+        ['micro', 'scooter icon', 'Micro', '< 15,000 barrels / year'],
+        ['regional', 'truck icon', 'Regional', '> 15,000 and < 6,000,000 barrels / year'],
+        ['large', 'boat icon', 'Large', '> 6,000,000 barrels / year'],
+        ['brewpub', 'beer and burger icon', 'Brewpub', 'They serve their own beer and food too'],
+        ['taproom', 'beer tap icon', 'Taproom', 'They serve their own beer, but no emphasis on food'],
+        ['contract', 'contract icon', 'Contract', 'Brewery hired to produce specific beer'],
+        ['proprietor', 'duplex icon', 'Proprietor', 'Shared brewery'],
+        ['bar', 'billiards icon', 'Bar', 'Bar that brews their own beer'],
+        ['planning', 'schematics icon', 'Planning', 'Brewery in planning'],
+        ['bikeTrail', 'solid dark green line', 'Bike Route', 'Trails'],
+        ['bikeDedicated', 'solid light green line', 'Bike Route', 'Dedicated lanes'],
+        ['bikeFriendly', 'dotted green line', 'Bike Route', 'Bike friendly roads']
+      ];
       let keyHTML = '';
       for (let x = 0; x <= 11; x++) {
         keyHTML += `
@@ -245,22 +112,22 @@ function addListeners() {
         $('.slideUp').show();
       });
     } else {
-      $('.slideUp').hide();
-      $('.key').slideUp(1000, function(){
-        $('.key').delay().html('');
-      });
+      $(".slideUp").click()
     }
-  }) // Show Map Key button click
-
+  })
+}
+function hideMapKeyArrowImageClick() {
   $(document).on('click', '.slideUp',function(){
     event.preventDefault();
     $('.slideUp').hide();
     $('.key').slideUp(1000, function(){
       $('.key').delay().html('');
     });
-  })// Hide Map Key arrow image click
-
+  })
+}
+function handleMapDirOnWindowResize() {
   window.addEventListener('resize', function(){
+    loadRowsOrTiles();
     const mq = window.matchMedia("(min-width: 600px)");
     if (mq.matches) {
       $('.toggleMapDir').addClass('hide');
@@ -307,55 +174,48 @@ function addListeners() {
         $('#textDirections').show();
         $('#textDirections').removeClass('hideDirections');
       } // If trying to show directions
-    } // If window is too small to show map and directions side by side
-  }, true); // Toggle Map or Directions placement on window resize
-
+    } // If window is too small then show map and directions side by side
+  }, true);
+}
+function pageButtonNavigation() {
   $('#pagesButtons').on('click', 'button', function(event) {
     event.preventDefault();
     clearDirections();
+    $('#endPoint').val('');
     if (brewResults.length > 0) {
-      currentPage = event.currentTarget.id.replace("brewPage", "");
-      displayBrewResults(currentPage);
+      currentPage = event.currentTarget.id.replace('brewPage', '');
+      displayBrewResults();
     }
-  }); // Result page button navigation
-
+  });
+}
+function resultsPerPageChange() {
   $('#resultsPerPage').on('change', function(event) {
     event.preventDefault();
     clearDirections();
+    $('#endPoint').val('');
     if (brewResults.length > 0) {
-      displayBrewResults(1);
+      currentPage = 1
+      displayBrewResults();
     }
-  }); // Modify results per page
-
+  });
+}
+function breweryResultsLinkClick() {
+  $('#resultsText').on('click', 'a', function(event) {
+    event.preventDefault();
+    window.open($(this).html(),'_blank');
+  });
+}
+function breweryResultsEntryClick() {
   $('#resultsText').on('click', 'div', function(event) {
     event.preventDefault();
-    $('.toggleMapDir').addClass('hide');
     if (directions) { clearDirections(); }
-    // Clear directions
 
-    $('#endPoint').val(this.id);
-    // Send Brewery name to textbox
-
-    endMarkerIndex = $(this).index() + (currentPage - 1) * $('#resultsPerPage').val();
-    // Save index of brewery clicked
-
-    markers.forEach(function(m) { m.setMap(null); });
-    // Hide all markers
-    
     markers[$(this).index()].setMap(map);
-    // Make only clicked marker showing
-
-    $('#map').show();
-    $('#map').removeClass('hideMap');
-    map.setCenter(new google.maps.LatLng(brewResults[endMarkerIndex].latitude, brewResults[endMarkerIndex].longitude));
-    map.setZoom(13);
-    showMapOrDir = 'map';
-    // Zoom in to brewery marker
-
-    $('.startingPoint').removeClass('hide');
-    $('#startingText, .labelDestination, #endPoint, .searchRoutes').removeAttr("tabindex");
-    // Make route form accessible
-  }); // Handles brewery results entry click
+    // Make clicked marker showing if not
+    
+    google.maps.event.trigger(markers[$(this).index()], 'click');
+    // Call marker click event
+  });
 }
 
 // Tools
@@ -417,7 +277,7 @@ function initMap(options){
   // Display bike layer
 
   if (!directions) {
-    displayBrewResults(1);
+    getBrewSearchInfo();
   } // Display on load or current search markers
 }
 async function createMarkers(min, max) {
@@ -450,7 +310,7 @@ async function createMarkers(min, max) {
       if (!noResults) { 
         address = (brewResults[x].street == "" ? "" : brewResults[x].street + ",") + brewResults[x].city + "," + brewResults[x].state + "," + brewResults[x].postal_code;
       } else {
-        address = $('#cityText').val() + ($('#stateText').val() == "" ? "" : ", " + $('#stateText').val()) + ", United States";
+        address = ($('#cityText').val() == "" ? "" : $('#cityText').val()) + ($('#stateText').val() == "" ? "" : ", " + $('#stateText').val()) + ", United States";
       }
       address = address.replace(/ /g, '+');
       address = formatQueryParams({
@@ -461,14 +321,20 @@ async function createMarkers(min, max) {
       let res = await fetch(geoUrl + geoKey + "&location=" + address);
       let data = await res.json();
       // Search
-
+      
       lat = parseFloat(data.results[0].locations[0].latLng.lat);
       lng = parseFloat(data.results[0].locations[0].latLng.lng);
+      if (noResults) {
+        bounds.extend({lat:lat, lng:lng});
+        map.fitBounds(bounds);
+        map.setZoom(11);
+      } // Show city coordinates if no brewery results
+
       brewResults[x].latitude = lat;
       brewResults[x].longitude = lng;
-    } // If coordinates not provided then find coordinates by address search
+    } // If coordinates not provided then set coordinates by address search
 
-    markersLatLng[x] = {lat:lat, lng:lng};
+    markersLatLng[x] = {lat:lat,lng:lng};
     bounds.extend({lat:lat, lng:lng});
     // Add the current marker to the overall bounds of the map
 
@@ -506,15 +372,28 @@ function addMarker(marker){
 
   if (marker.content) {
     gMarker.addListener('click', function(){
-      if (infoWindow) { 
-        infoWindow.close(); 
-      } // Close open infoWindows
+      if (infoWindow) { infoWindow.close(); } // Close any open infoWindows
 
-      infoWindow = new google.maps.InfoWindow({
-        content:marker.content
-      });
+      infoWindow = new google.maps.InfoWindow({ content:marker.content });
       infoWindow.open(map, gMarker);
-      // Open current infoWindow
+      // Open current marker infoWindow
+
+      let breweryName = marker.content.slice(4, marker.content.indexOf('(') - 1);
+      $('#endPoint').val(breweryName);
+      // Get brewery name from marker content
+
+      breweryName = $('<div>').text(breweryName).html();
+      // Convert brewery name to html for searching purposes
+
+      endMarkerIndex = $('#resultsText').html().slice($('#resultsText').html().indexOf(breweryName) - 20, $('#resultsText').html().indexOf(breweryName));
+      endMarkerIndex = endMarkerIndex.slice(endMarkerIndex.indexOf(" ") + 1, endMarkerIndex.indexOf(" id=") - 1);
+      endMarkerIndex = parseInt(endMarkerIndex);;
+      // Save index of brewery clicked
+
+      $('.toggleMapDir').addClass('hide');
+      $('.startingPoint').removeClass('hide');
+      $('#startingText, .labelDestination, #endPoint, .searchRoutes').removeAttr("tabindex");
+      // Make route form accessible
     });
   } // Add Content
 }
@@ -527,18 +406,24 @@ async function getBrewSearchInfo() {
   // Get the search criteria
 
   if (city == "" && state == "" && brewery == "") {
-    $('.tip1').fadeOut('slow', function(){
-      $('.tip1').delay(3000).fadeIn();
-    });
     $('.tipError1').fadeIn('slow', function(){
       $('.tipError1').delay(3000).fadeOut();
     });
     return false;
-  } else { clearDirections(); }
+  } else { 
+    clearDirections();
+    $('#endPoint').val('');
+  }
   // Asks for more information or prepares map for search
 
   if (state.length == 2) {
     state = state.toUpperCase();
+    let states = [
+      "ALABAMA", "ALASKA", "ARIZONA", "ARKANSAS", "CALIFORNIA", "COLORADO", "CONNECTICUT", "DELAWARE", "FLORIDA", "GEORGIA", "HAWAII", "IDAHO", "ILLINOIS", "INDIANA", "IOWA", "KANSAS", "KENTUCKY", "LOUISIANA", "MAINE", "MARYLAND", "MASSACHUSETTS", "MICHIGAN", "MINNESOTA", "MISSISSIPPI", "MISSOURI", "MONTANA", "NEBRASKA", "NEVADA", "NEW HAMPSHIRE", "NEW JERSEY", "NEW MEXICO", "NEW YORK", "NORTH CAROLINA", "NORTH DAKOTA", "OHIO", "OKLAHOMA", "OREGON", "PENNSYLVANIA", "RHODE ISLAND", "SOUTH CAROLINA", "SOUTH DAKOTA", "TENNESSEE", "TEXAS", "UTAH", "VERMONT", "VIRGINIA", "WASHINGTON", "WEST VIRGINIA", "WISCONSIN", "WYOMING"
+    ];
+    let stateCode = [
+      "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+    ];
     if (stateCode.includes(state)) {
       state = states[stateCode.indexOf(state)].toLowerCase();
       $('#stateText').val(state);
@@ -553,7 +438,8 @@ async function getBrewSearchInfo() {
   brewResults = await brewSearch(beerUrl + search);
   // Reset results and search
  
-  displayBrewResults(1);
+  currentPage = 1
+  displayBrewResults();
   // Display results
 }
 async function brewSearch(search) {
@@ -573,21 +459,22 @@ async function brewSearch(search) {
 
   return brewResults;
 }
-function displayBrewResults(page) {
+function displayBrewResults() {
   document.getElementById("numberOfResults").innerHTML = brewResults.length + " Results Found";
   // Display number of results found
 
   let pages = Math.ceil(brewResults.length / $('#resultsPerPage').val());
   let pagesHTML = "";
   for (let x = 1; x <= pages; x++) {
-    pagesHTML += `<button id="brewPage${x}" class="brewPageButton"><label>${x}</label></button>`;
+    let highlight = x == currentPage ? ' highlight' : '';
+    pagesHTML += `<button id="brewPage${x}" class="brewPageButton${highlight}"><label>${x}</label></button>`;
   }
   if (brewResults.length <= parseInt($('#resultsPerPage').val(), 10)) { pagesHTML = ''; }
   document.getElementById("pagesButtons").innerHTML = pagesHTML;
   // Create page buttons to display results
 
-  let min = $('#resultsPerPage').val() * (page - 1);
-  let max = brewResults.length < $('#resultsPerPage').val() * page ? brewResults.length : $('#resultsPerPage').val() * page;
+  let min = $('#resultsPerPage').val() * (currentPage - 1);
+  let max = brewResults.length < $('#resultsPerPage').val() * currentPage ? brewResults.length : $('#resultsPerPage').val() * currentPage;
   // Define the array indices to display for the desired page
 
   let resultText = "";
@@ -596,35 +483,95 @@ function displayBrewResults(page) {
     let brewery_type = brewResults[x].brewery_type == "" ? "" : " (" + brewResults[x].brewery_type.charAt(0).toUpperCase() + brewResults[x].brewery_type.slice(1) + ")";
     let address = brewResults[x].street.length == 0 ? "Not Provided" : brewResults[x].street + " " + brewResults[x].city + ", " + brewResults[x].state + " " + brewResults[x].postal_code;
     let phone = brewResults[x].phone == "" ? "Not Provided" : formatPhoneNumber(brewResults[x].phone);
-    let website = brewResults[x].website_url == "" ? "Not Provided" : brewResults[x].website_url;
+    let website = brewResults[x].website_url == "" ? "Not Provided" : 
+    "<a href=" + brewResults[x].website_url + ">" + brewResults[x].website_url + "</a>";
     // Pull data from API result into variables
-    
-    resultText += `
-    <div class="entry ${x}" id="${name}" >
-      <h1>Brewery: ${name}${brewery_type} </h1>
+
+    resultText += `<div class="entry ${x} tileEntry" id="${name}" >
+      <h1>${name}${brewery_type}</h1>
       <h2>Address: ${address}</h2>
       <h2>Phone: ${phone}</h2>
       <h2>Website: ${website}</h2>
-    </div>
-    ` // Format data
+    </div>` // Format data
   }
   document.getElementById("resultsText").innerHTML = resultText;
-  // Display data in text form
+  if (originalHeight == 0) { originalHeight = $('.entry').height(); }
+  loadRowsOrTiles();
+  // Display data in text form in tiles or rows
 
   createMarkers(min, max);
   // Add markers to the map for the current page
+}
+function loadRowsOrTiles() {
+  // Make brewery entries into inline tiles or just rows
+  const mq = window.matchMedia("(min-width: 500px)");
+  if (mq.matches) {
+    let entriesPerRow = Math.floor($('body').width() / 175);
+    $('.entry').width(($('body').width() / entriesPerRow) - 2);
+    // Normalize width
+
+    let min = $('#resultsPerPage').val() * (currentPage - 1);
+    let max = brewResults.length < $('#resultsPerPage').val() * currentPage ? brewResults.length : $('#resultsPerPage').val() * currentPage;
+    let maxHeight = 0;
+    $('.entry').height('unset');
+    for (let x = min; x < max; x++) {
+      if ($('.entry.' + x).height() > maxHeight) { maxHeight = $('.entry.' + x).height(); }
+    }
+    $('.entry').height(maxHeight);
+    // Normalize height
+
+    $('.entry').removeClass('evenOdd');
+    if (entriesPerRow % 2 == 0) {
+      for (let x = min; x < max; x++) {
+        if (Math.floor(x / entriesPerRow) % 2 == 0) {
+          if (x % 2 == 1) { $('.entry.' + x).addClass('evenOdd'); }
+        } else {
+          if (x % 2 != 1) { $('.entry.' + x).addClass('evenOdd'); }
+        }
+      }
+    } else {
+      for (let x = min; x < max; x++) {
+        if (x % 2 == 1) {
+          $('.entry.' + x).addClass('evenOdd');
+        }
+      }
+    }
+    // Repaint entries to alternate
+  } else {
+    $('.entry').removeClass('even1, even2, odd');
+    // Repaint entries to alternate
+
+    if ($('.entry').height() > originalHeight) { 
+      $('.entry').height(originalHeight);
+      $('.entry').height('unset'); 
+    }
+    $('.entry').width($('body').width() - 2);
+    // Reset original height and width
+  }
 }
 
 // Routes
 async function getRoutePoints() {
   let whichRoute = '';
   if ($('#startingText').val() == "") {
+    $('.showKey').css('z-index', '0');
     $('.tipError2').fadeIn('slow', function(){
       $('.tipError2').delay(3000).fadeOut();
     });
     return false;
   } else { 
-    clearDirections(); 
+    savedMap = {
+      zoom:map.zoom,
+      center:map.center,
+      mapTypeId:map.mapTypeId
+    };
+    clearDirections();
+    infoWindow.close();
+    markers.forEach(function(m) { m.setMap(null); });
+    // Hide all markers
+    
+    markers[endMarkerIndex - (currentPage - 1) * $('#resultsPerPage').val()].setMap(map);
+    // Make only clicked marker showing
   }
   directions = true;
   // Asks for more information or prepares map for search
@@ -635,7 +582,7 @@ async function getRoutePoints() {
   let lat = parseFloat(data.results[0].locations[0].latLng.lat);
   let lng = parseFloat(data.results[0].locations[0].latLng.lng);
   origin = lat + ',' + lng;
-  markersLatLng.push({lat:lat, lng:lng});
+  markersLatLng.push({lat:lat,lng:lng});
   // Get origin lat and lng
 
   let image = "https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-a.png&text=A&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1";
@@ -697,6 +644,7 @@ function routeSearchAndDisplay(origin, destination) {
     } else {
       if (status == 'ZERO_RESULTS') {
         directions = false;
+        $('.showKey').css('z-index', '0');
         $('.tipError3').fadeIn('slow', function(){
           $('.tipError3').delay(3000).fadeOut();
         });
@@ -707,15 +655,12 @@ function routeSearchAndDisplay(origin, destination) {
 }
 function clearDirections() {
   // Clears previous directions on map and text directions
+  $('#map').show();
+  $('#map').removeClass('hideMap');
   showMapOrDir = 'map';
   $('.toggleMapDir').attr('tabindex', '-1');
   if (!directions) { return false; }
-  options = {
-    zoom:map.zoom,
-    center:map.center,
-    mapTypeId:map.mapTypeId
-  }
-  map = new google.maps.Map(document.getElementById('map'), options);
+  map = new google.maps.Map(document.getElementById('map'), savedMap);
   let bikeLayer = new google.maps.BicyclingLayer();
   bikeLayer.setMap(map);
   // Resets map to current location and zoom without blue route line
@@ -739,21 +684,19 @@ function clearDirections() {
 
 // Initial Setup
 function initialSetup() {
-  $(`.start2`).hide();
   $('.tipError').hide();
   $('.key').hide();
-  define();
   addListeners();
   initMap();
+  $('#cityText').val('');
   loadSplashPage();
 
   let year = new Date().getFullYear();
   $('.copy').html(`&copy ${year} Patrick Quilty`);
-  // Also updates copyright year
+  // Updates copyright year
 }
 function loadSplashPage() {
   // Fade everything else to the back and show the splash page
-  
   $(window).on('beforeunload', function() {
     $('body').hide();
     $(window).scrollTop(0);
@@ -798,7 +741,7 @@ document.addEventListener('DOMContentLoaded', function () {
       lang = document.querySelector('html').lang;
     } else {
       lang = 'en';
-    }
+    } // Set language to english unless a language is already defined
 
     let js_file = document.createElement('script');
     js_file.type = 'text/javascript';
