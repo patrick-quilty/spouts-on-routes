@@ -21,6 +21,9 @@ input[type=button], input[type=submit], .go, select, .toggleMapDir, .fullscreen,
 body * {
   outline: none;
 }
+.wait {
+  pointer-events: none;
+}
 
 /* Splash Page */
 .splashPage {

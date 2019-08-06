@@ -8,6 +8,7 @@ let endMarkerIndex = -1; // The marker index for the destination
 let currentPage = 1; // The current page of the brewery results display
 let directions = false; // Whether or not there are directions saved currently
 let showMapOrDir = 'map'; // Which is showing the map or the directions
+let clearing = false; // Used while clearing the directions
 let brewResults = []; // The results of the brewery api search
 let originalHeight = 0; // For tiling the brewery results entries
 let googleKey = 'AIzaSyAIWwZQ6TOKQzmvnZPY4hMEoF3eBdAGckU';
@@ -180,7 +181,7 @@ function handleMapDirOnWindowResize() {
 function pageButtonNavigation() {
   $('#pagesButtons').on('click', 'button', function(event) {
     event.preventDefault();
-    clearDirections();
+    if (!clearing) { clearDirections(); }
     $('#endPoint').val('');
     if (brewResults.length > 0) {
       currentPage = event.currentTarget.id.replace('brewPage', '');
@@ -208,13 +209,10 @@ function breweryResultsLinkClick() {
 function breweryResultsEntryClick() {
   $('#resultsText').on('click', 'div', function(event) {
     event.preventDefault();
-    if (directions) { clearDirections(); }
-
-    markers[$(this).index()].setMap(map);
-    // Make clicked marker showing if not
-    
-    google.maps.event.trigger(markers[$(this).index()], 'click');
-    // Call marker click event
+    let markerIndex = $(this).index();
+    clearDirections();
+    google.maps.event.trigger(markers[markerIndex], 'click');
+    // Clear directions and call marker click event
   });
 }
 
@@ -344,7 +342,8 @@ async function createMarkers(min, max) {
         content:'<h1>' + name + ' (' + brewResults[x].brewery_type.charAt(0).toUpperCase() + brewResults[x].brewery_type.slice(1)
         + ')</h1>',
         iconImage:'resources/' + brewResults[x].brewery_type + '.png',
-        map:map
+        map:map,
+        label:x
       };
       addMarker(marker);
     } // Add each marker
@@ -354,6 +353,7 @@ async function createMarkers(min, max) {
   map.fitBounds(bounds);
   if (map.getZoom() > 14) { map.setZoom(14); }
   // Fit the map to include all the markers
+  return true;
 }
 function addMarker(marker){
   // Add marker to object array and map
@@ -362,13 +362,13 @@ function addMarker(marker){
     map:map,
     icon:marker.iconImage,
     animation:google.maps.Animation.DROP
-  }); // Add Position and Animation
+  }); // Add position and animation
 
   markers.push(gMarker);
 
   if (marker.iconImage) {
     gMarker.setIcon(marker.iconImage);
-  } // Add Icon
+  } // Add icon
 
   if (marker.content) {
     gMarker.addListener('click', function(){
@@ -378,16 +378,10 @@ function addMarker(marker){
       infoWindow.open(map, gMarker);
       // Open current marker infoWindow
 
-      let breweryName = marker.content.slice(4, marker.content.indexOf('(') - 1);
-      $('#endPoint').val(breweryName);
-      // Get brewery name from marker content
+      $('#endPoint').val(marker.content.slice(4, marker.content.indexOf('(') - 1));
+      // Print brewery name from marker content
 
-      breweryName = $('<div>').text(breweryName).html();
-      // Convert brewery name to html for searching purposes
-
-      endMarkerIndex = $('#resultsText').html().slice($('#resultsText').html().indexOf(breweryName) - 20, $('#resultsText').html().indexOf(breweryName));
-      endMarkerIndex = endMarkerIndex.slice(endMarkerIndex.indexOf(" ") + 1, endMarkerIndex.indexOf(" id=") - 1);
-      endMarkerIndex = parseInt(endMarkerIndex);;
+      endMarkerIndex = marker.label;
       // Save index of brewery clicked
 
       $('.toggleMapDir').addClass('hide');
@@ -459,7 +453,7 @@ async function brewSearch(search) {
 
   return brewResults;
 }
-function displayBrewResults() {
+async function displayBrewResults() {
   document.getElementById("numberOfResults").innerHTML = brewResults.length + " Results Found";
   // Display number of results found
 
@@ -469,7 +463,11 @@ function displayBrewResults() {
     let highlight = x == currentPage ? ' highlight' : '';
     pagesHTML += `<button id="brewPage${x}" class="brewPageButton${highlight}"><label>${x}</label></button>`;
   }
-  if (brewResults.length <= parseInt($('#resultsPerPage').val(), 10)) { pagesHTML = ''; }
+  if (brewResults.length <= parseInt($('#resultsPerPage').val(), 10)) {
+    $('#pagesButtons').hide();
+  } else {
+    $('#pagesButtons').show();
+  }
   document.getElementById("pagesButtons").innerHTML = pagesHTML;
   // Create page buttons to display results
 
@@ -499,8 +497,11 @@ function displayBrewResults() {
   loadRowsOrTiles();
   // Display data in text form in tiles or rows
 
+  $('*').addClass('wait');
+  let chill = await createMarkers(min, max);
   createMarkers(min, max);
-  // Add markers to the map for the current page
+  $('*').removeClass('wait');
+  // Add markers to the map for the current page, but wait until they are all loaded so clicking will call them by the right index
 }
 function loadRowsOrTiles() {
   // Make brewery entries into inline tiles or just rows
@@ -658,6 +659,7 @@ function clearDirections() {
   $('#map').show();
   $('#map').removeClass('hideMap');
   showMapOrDir = 'map';
+  $('.toggleMapDir').addClass('hide');
   $('.toggleMapDir').attr('tabindex', '-1');
   if (!directions) { return false; }
   map = new google.maps.Map(document.getElementById('map'), savedMap);
@@ -665,11 +667,10 @@ function clearDirections() {
   bikeLayer.setMap(map);
   // Resets map to current location and zoom without blue route line
 
-  let markerIndex = endMarkerIndex % $('#resultsPerPage').val();
-  markers[markerIndex].content = '<h1>' + brewResults[endMarkerIndex].name + '</h1>';
-  markers[markerIndex].iconImage = 'resources/' + brewResults[endMarkerIndex].brewery_type + '.png';
-  addMarker(markers[markerIndex]);
-  // Add marker to destination
+  clearing = true;
+  $('#brewPage' + currentPage).click();
+  clearing = false;
+  // Reload current results page
 
   $('#textDirections').html('');
   // Clears text directions
@@ -680,6 +681,7 @@ function clearDirections() {
   // Make map full screen width
 
   directions = false;
+  return true;
 }
 
 // Initial Setup
