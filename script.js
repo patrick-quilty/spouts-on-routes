@@ -207,10 +207,10 @@ function breweryResultsLinkClick() {
   });
 }
 function breweryResultsEntryClick() {
-  $('#resultsText').on('click', 'div', function(event) {
+  $('#resultsText').on('click', 'div', async function(event) {
     event.preventDefault();
     let markerIndex = $(this).index();
-    clearDirections();
+    let chill = await clearDirections();
     google.maps.event.trigger(markers[markerIndex], 'click');
     // Clear directions and call marker click event
   });
@@ -373,7 +373,7 @@ function addMarker(marker){
   if (marker.content) {
     gMarker.addListener('click', function(){
       if (infoWindow) { infoWindow.close(); } // Close any open infoWindows
-
+      
       infoWindow = new google.maps.InfoWindow({ content:marker.content });
       infoWindow.open(map, gMarker);
       // Open current marker infoWindow
@@ -383,7 +383,7 @@ function addMarker(marker){
 
       endMarkerIndex = marker.label;
       // Save index of brewery clicked
-
+      
       $('.toggleMapDir').addClass('hide');
       $('.startingPoint').removeClass('hide');
       $('#startingText, .labelDestination, #endPoint, .searchRoutes').removeAttr("tabindex");
