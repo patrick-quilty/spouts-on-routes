@@ -238,7 +238,7 @@ input, .labelDestination, .searchRoutes, .searchSpouts, .toggleMapDir, .fullscre
 }
 .keySegment {
   width: calc(1.5vw + 50px);
-  max-width: 65px;
+  max-width: 70px;
   margin-left: 10px;
   margin-right: 5px;
 }
