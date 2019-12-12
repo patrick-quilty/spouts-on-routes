@@ -237,7 +237,7 @@ input, .labelDestination, .searchRoutes, .searchSpouts, .toggleMapDir, .fullscre
   background-color: white;
 }
 .keySegment {
-  width: calc(1.5vw + 45px);
+  width: calc(1.5vw + 50px);
   max-width: 65px;
   margin-left: 10px;
   margin-right: 5px;

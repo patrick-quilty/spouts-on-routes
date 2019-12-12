@@ -11,10 +11,10 @@ let showMapOrDir = 'map'; // Which is showing the map or the directions
 let clearing = false; // Used while clearing the directions
 let brewResults = []; // The results of the brewery api search
 let originalHeight = 0; // For tiling the brewery results entries
-let googleKey = 'AIzaSyAIWwZQ6TOKQzmvnZPY4hMEoF3eBdAGckU';
-let beerUrl = 'https://api.openbrewerydb.org/breweries?';
-let geoUrl = 'https://www.mapquestapi.com/geocoding/v1/address?key=';
-let geoKey = 'tAgL4sSNSMqpOGN4SQc8hISAmqpRroMi';
+const googleKey = 'AIzaSyAIWwZQ6TOKQzmvnZPY4hMEoF3eBdAGckU';
+const beerUrl = 'https://api.openbrewerydb.org/breweries?';
+const geoUrl = 'https://www.mapquestapi.com/geocoding/v1/address?key=';
+const geoKey = 'tAgL4sSNSMqpOGN4SQc8hISAmqpRroMi';
 
 // Listeners
 function addListeners() {
@@ -111,9 +111,10 @@ function showMapKeyButtonClick() {
       $('.slideUp').hide();
       $('.key').slideDown(1000, function(){
         $('.slideUp').show();
+        loadRowsOrTiles();
       });
     } else {
-      $(".slideUp").click()
+      $(".slideUp").click();
     }
   })
 }
@@ -123,6 +124,7 @@ function hideMapKeyArrowImageClick() {
     $('.slideUp').hide();
     $('.key').slideUp(1000, function(){
       $('.key').delay().html('');
+      loadRowsOrTiles();
     });
   })
 }
@@ -326,6 +328,7 @@ async function createMarkers(min, max) {
         bounds.extend({lat:lat, lng:lng});
         map.fitBounds(bounds);
         map.setZoom(11);
+        return;
       } // Show city coordinates if no brewery results
 
       brewResults[x].latitude = lat;
@@ -335,7 +338,7 @@ async function createMarkers(min, max) {
     markersLatLng[x] = {lat:lat,lng:lng};
     bounds.extend({lat:lat, lng:lng});
     // Add the current marker to the overall bounds of the map
-
+    
     if (!noResults) {
       let marker = {
         position:{lat:lat, lng:lng},
