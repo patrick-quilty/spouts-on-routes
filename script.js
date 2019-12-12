@@ -88,9 +88,9 @@ function showMapKeyButtonClick() {
         ['proprietor', 'duplex icon', 'Proprietor', 'Shared brewery'],
         ['bar', 'billiards icon', 'Bar', 'Bar that brews their own beer'],
         ['planning', 'schematics icon', 'Planning', 'Brewery in planning'],
-        ['bikeTrail', 'solid dark green line', 'Bike Route', 'Trails'],
-        ['bikeDedicated', 'solid light green line', 'Bike Route', 'Dedicated lanes'],
-        ['bikeFriendly', 'dotted green line', 'Bike Route', 'Bike friendly roads']
+        ['bikeTrail', 'solid dark green line', 'Route', 'Trails'],
+        ['bikeDedicated', 'solid light green line', 'Route', 'Dedicated lanes'],
+        ['bikeFriendly', 'dotted green line', 'Route', 'Bike friendly roads']
       ];
       let keyHTML = '';
       for (let x = 0; x <= 11; x++) {
