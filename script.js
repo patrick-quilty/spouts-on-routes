@@ -482,7 +482,7 @@ async function displayBrewResults() {
   for (let x = min; x < max; x++) {
     let name = brewResults[x].name;
     let brewery_type = brewResults[x].brewery_type == "" ? "" : " (" + brewResults[x].brewery_type.charAt(0).toUpperCase() + brewResults[x].brewery_type.slice(1) + ")";
-    let address = brewResults[x].street.length == 0 ? "Not Provided" : brewResults[x].street + " " + brewResults[x].city + ", " + brewResults[x].state + " " + brewResults[x].postal_code;
+    let address = brewResults[x].street ? brewResults[x].street + " " + brewResults[x].city + ", " + brewResults[x].state + " " + brewResults[x].postal_code : "Not Provided";
     let phone = brewResults[x].phone == "" ? "Not Provided" : formatPhoneNumber(brewResults[x].phone);
     let website = brewResults[x].website_url == "" ? "Not Provided" : 
     "<a href=" + brewResults[x].website_url + ">" + brewResults[x].website_url + "</a>";
