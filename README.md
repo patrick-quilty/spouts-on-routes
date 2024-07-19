@@ -1,6 +1,6 @@
 # Spouts on Routes
 
-Live App: [Live App](https://quiltdaddy.github.io/spouts-on-routes/)
+Live App: [Live App](https://patrick-quilty.github.io/spouts-on-routes/)
 
 Screenshot: ![Screenshot](https://i.imgur.com/m2IdGKk.png)
 
