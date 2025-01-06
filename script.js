@@ -11,10 +11,10 @@ let showMapOrDir = 'map'; // Which is showing the map or the directions
 let clearing = false; // Used while clearing the directions
 let brewResults = []; // The results of the brewery api search
 let originalHeight = 0; // For tiling the brewery results entries
-const googleKey = 'AIzaSyAIWwZQ6TOKQzmvnZPY4hMEoF3eBdAGckU';
+const googleKey = import.meta.env.VITE_GOOGLE_KEY;;
 const beerUrl = 'https://api.openbrewerydb.org/breweries?';
 const geoUrl = 'https://www.mapquestapi.com/geocoding/v1/address?key=';
-const geoKey = 'tAgL4sSNSMqpOGN4SQc8hISAmqpRroMi';
+const geoKey = import.meta.env.VITE_GEO_KEY;
 
 // Listeners
 function addListeners() {
@@ -96,14 +96,14 @@ function showMapKeyButtonClick() {
       for (let x = 0; x <= 11; x++) {
         keyHTML += `
         <div class='keyRow'>
-          <img class='keyIcon' src='resources/` + keyArray[x][0] + `.png' alt='` + keyArray[x][1] + `'>
+          <img class='keyIcon' src='` + keyArray[x][0] + `.png' alt='` + keyArray[x][1] + `'>
           <p class='keySegment'>` + keyArray[x][2] + `</p>
           <p class='keyDescription'>` + keyArray[x][3] + `</p>
         </div>`;
       } // Create key
 
       keyHTML += `
-      <img class='slideUp' src='resources/slideUp.png' alt='slide up arrow image button'>
+      <img class='slideUp' src='slideUp.png' alt='slide up arrow image button'>
       `; // Add slide up button
 
       $('.key').hide();
@@ -341,12 +341,12 @@ async function createMarkers(min, max) {
     
     if (!noResults) {
       let marker = {
-        position:{lat:lat, lng:lng},
-        content:'<h1>' + name + ' (' + brewResults[x].brewery_type.charAt(0).toUpperCase() + brewResults[x].brewery_type.slice(1)
+        position: { lat: lat, lng: lng },
+        content: '<h1>' + name + ' (' + brewResults[x].brewery_type.charAt(0).toUpperCase() + brewResults[x].brewery_type.slice(1)
         + ')</h1>',
-        iconImage:'resources/' + brewResults[x].brewery_type + '.png',
-        map:map,
-        label:x
+        iconImage: brewResults[x].brewery_type + '.png',
+        map: map,
+        label: x
       };
       addMarker(marker);
     } // Add each marker
@@ -688,18 +688,14 @@ function clearDirections() {
 }
 
 // Initial Setup
-function initialSetup() {
+window.initialSetup = () => {
   $('.tipError').hide();
   $('.key').hide();
   addListeners();
   initMap();
   $('#cityText').val('');
   loadSplashPage();
-
-  let year = new Date().getFullYear();
-  $('.copy').html(`&copy ${year} Patrick Quilty`);
-  // Updates copyright year
-}
+};
 function loadSplashPage() {
   // Fade everything else to the back and show the splash page
   $(window).on('beforeunload', function() {
@@ -740,17 +736,17 @@ function hideSplashPage() {
   // Undo everything the splash page did and let the program be runnable
 }
 document.addEventListener('DOMContentLoaded', function () {
-  if (document.querySelectorAll('#map').length > 0)
-  {
-    if (document.querySelector('html').lang) {
-      lang = document.querySelector('html').lang;
-    } else {
-      lang = 'en';
-    } // Set language to english unless a language is already defined
-
+  if (document.querySelectorAll('#map').length > 0) {
+    const lang = document.querySelector('html').lang || 'en';
     let js_file = document.createElement('script');
     js_file.type = 'text/javascript';
-    js_file.src = `https://maps.googleapis.com/maps/api/js?callback=initialSetup&key=${googleKey}&language=` + lang;
+    js_file.src = `https://maps.googleapis.com/maps/api/js?callback=initialSetup&key=${googleKey}&language=${lang}&loading=async`;
     document.getElementsByTagName('head')[0].appendChild(js_file);
   }
 }); // Load initial setup after everything else is loaded for the correct order of map display
+
+const originalConsoleWarn = console.warn;
+console.warn = function (message) {
+  if (message.includes('As of February 21st, 2024, google.maps.Marker is deprecated.')) return;
+  originalConsoleWarn.apply(console, arguments);
+}; // Hide marker warning

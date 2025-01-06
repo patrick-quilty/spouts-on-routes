@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Spouts-on-Routes</title>
+    <meta name="viewport" content="width=device-width">
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Farro&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="module" crossorigin src="/spouts-on-routes/assets/index-CEym73dc.js"></script>
+    <link rel="stylesheet" crossorigin href="/spouts-on-routes/assets/index-C0CLVVwv.css">
+  </head>
+  <main role="main">
+    <body hidden>
+      <section tabIndex="-1" role="region" class="splashPage">
+        <img tabIndex="-1" src="logo.png" alt="bike route stencil pointing towards beer keg with spout" class="logo">
+        <p tabIndex="-1" class="title">Spouts on Routes</p>
+        <button type="button" class="go">Go!</button>
+        <p tabIndex="-1" class="tagline">Find bike routes to beer spouts!</p>
+      </section>
+
+      <section tabIndex="-1" role="region" class="mapDir" id="mapDir">
+        <div tabIndex="-1" id="map"></div>
+        <div tabIndex="-1" id="textDirections" class="hideDirections"></div>
+      </section>
+
+      <div class="searchContainer"  tabIndex="-1">
+        <form tabIndex="-1" role="form" class="searchForm" id="searchForm">
+          <input tabIndex="-1" type="text" id="cityText" placeholder="City" value="Cincinnati">
+          <input tabIndex="-1" type="text" id="stateText" placeholder="State">
+          <input tabIndex="-1" type="text" id="breweryText" placeholder="Brewery Name">
+          <div tabIndex="-1" class="tooltip">
+            <input tabIndex="-1" type="submit" class="searchSpouts tooltip" value="Find Spouts"><span tabIndex="-1" class="tooltiptext tipError tipError1">Please fill out at<br>least one field in<br>this search area.</span>
+          </div>
+        </form>
+        <form tabIndex="-1" role="form" class="startingPoint hide">
+          <input tabIndex="-1" type="text" id="startingText" placeholder="Starting Point">
+          <label tabIndex="-1" class="labelDestination" for="endPoint">Destination</label>
+          <input tabIndex="-1" type="text" id="endPoint" readonly>
+          <div class="tooltip">
+            <input tabIndex="-1" type="submit" class="searchRoutes tooltip" value="Find Routes"><span tabIndex="-1" class="tooltiptext tipError tipError2">Please fill out a<br>starting point.</span>
+            <span tabIndex="-1" class="tooltiptext tipError tipError3">Desired route<br>returned zero<br>possible results.</span>
+          </div>
+        </form>
+        <section tabIndex="-1" role="region" class="otherControls">
+          <button tabIndex="-1" class="toggleMapDir hide">Toggle Map or Directions</button>
+          <button tabIndex="-1" class="fullscreen">Fullscreen Map/Directions</button>
+          <button tabIndex="-1" class="showKey">Show Map Key</button>
+        </section>
+      </div>
+
+      <section tabIndex="-1" role="region" class='key'></section>
+
+      <section tabIndex="-1" role="region" class='instructions'>
+        <p tabIndex="-1" class='instructionsText no_select'>Click on a brewery then add a starting point</p>
+      </section>
+
+      <section tabIndex="-1" role="region" class="breweryResults">
+        <div tabIndex="-1" id="showResults">
+          <label tabIndex="-1" id="numberOfResults">10 Results Found</label>
+          <label class="perPageLabel" tabIndex="-1">Results Per Page
+            <select tabIndex="-1" id="resultsPerPage">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+            </select>
+          </label>
+        </div>
+        <div tabIndex="-1" id="pagesButtons"></div>
+      </section>
+
+      <div tabIndex="-1" class="tileContainer" id="resultsText"></div>
+      
+    </body>
+  </main>
+  <footer tabIndex="-1" role="contentinfo" class="credits">
+    <p  tabIndex="-1">This website is powered by Google Maps API, Open Brewery DB API, and Mapquest Geocoding API.</p>
+    <div tabIndex="-1">Icons made by
+      <a tabIndex="-1" href="https://www.flaticon.com/authors/flat-icons" title="Flat Icons">Flat Icons</a> from <a tabIndex="-1" href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a tabIndex="-1" href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+    </div>
+  </footer>
+</html>
