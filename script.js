@@ -12,7 +12,7 @@ let clearing = false; // Used while clearing the directions
 let brewResults = []; // The results of the brewery api search
 let originalHeight = 0; // For tiling the brewery results entries
 const googleKey = import.meta.env.VITE_GOOGLE_KEY;;
-const beerUrl = 'https://api.openbrewerydb.org/breweries?';
+const beerUrl = 'https://api.openbrewerydb.org/v1/breweries?';
 const geoUrl = 'https://www.mapquestapi.com/geocoding/v1/address?key=';
 const geoKey = import.meta.env.VITE_GEO_KEY;
 
